@@ -13,8 +13,30 @@ pub fn load<T: serde::de::DeserializeOwned>(fname: &str) -> Vec<T> {
     if !Path::new(fname).exists() {
         return vec![];
     }
-    
+
     let file = File::open(fname).expect("Could not create file!");
     let list: Vec<T> = serde_json::from_reader(file).expect("Could not deserialize list");
     list
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::Path;
+
+    #[test]
+    fn test_save() {
+        let list = vec![1, 2, 3];
+        save(&list, "test.json");
+        assert!(Path::new("test.json").exists());
+    }
+
+    #[test]
+    fn test_load() {
+        let list = vec![1, 2, 3];
+        save(&list, "test.json");
+        let loaded_list = load::<i32>("test.json");
+        assert_eq!(loaded_list, list);
+    }
 }

@@ -78,3 +78,52 @@ pub fn list_tasks(tasks: &Vec<Task>, maybe_status: Option<&String>) {
         println!("{:?}", task);
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add_task() {
+        let mut tasks: Vec<super::Task> = Vec::new();
+        add_task(&mut tasks, "Task 1".to_string());
+        assert_eq!(tasks.len(), 1);
+        assert_eq!(tasks[0].description, Some("Task 1".to_string()));    
+    }
+
+    #[test]
+    fn test_update_task() {
+        let mut tasks: Vec<super::Task> = Vec::new();
+        add_task(&mut tasks, "Task 1".to_string());
+        update_task(&mut tasks, 1, "Task 2".to_string());
+        assert_eq!(tasks.len(), 1);
+        assert_eq!(tasks[0].description, Some("Task 2".to_string()));
+    }
+
+    #[test]
+    fn test_delete_task() {
+        let mut tasks: Vec<super::Task> = Vec::new();
+        add_task(&mut tasks, "Task 1".to_string());
+        delete_task(&mut tasks, 1);
+        assert_eq!(tasks.len(), 0);
+    }
+
+    #[test]
+    fn test_mark_in_progress() {
+        let mut tasks: Vec<super::Task> = Vec::new();
+        add_task(&mut tasks, "Task 1".to_string());
+        mark_in_progress(&mut tasks, 1);
+        assert_eq!(tasks.len(), 1);
+        assert_eq!(tasks[0].status, Status::InProgress);
+    }
+
+    #[test]
+    fn test_mark_done() {
+        let mut tasks: Vec<super::Task> = Vec::new();
+        add_task(&mut tasks, "Task 1".to_string());
+        mark_done(&mut tasks, 1);
+        assert_eq!(tasks.len(), 1);
+        assert_eq!(tasks[0].status, Status::Done);
+    }
+}
