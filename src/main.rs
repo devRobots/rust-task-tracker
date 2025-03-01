@@ -61,8 +61,8 @@ fn main() {
                 usage();
                 return;
             }
-            let filter = args.get(3);
-            list_tasks(tasks.clone(), filter)
+            let filter = args.get(2);
+            list_tasks(&tasks, filter)
         }
         _ => usage(),
     }

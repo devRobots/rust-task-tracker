@@ -38,7 +38,7 @@ pub fn update_task(tasks: &mut Vec<Task>, id: u16, description: String) {
 }
 
 pub fn delete_task(tasks: &mut Vec<Task>, id: u16) {
-    tasks.retain(|task| task.id != id);
+    tasks.retain(|task: &Task| task.id != id);
 }
 
 pub fn mark_in_progress(tasks: &mut Vec<Task>, id: u16) {
@@ -59,12 +59,22 @@ pub fn mark_done(tasks: &mut Vec<Task>, id: u16) {
     }
 }
 
-pub fn list_tasks(tasks: Vec<Task>, maybe_status: Option<&String>) {
-    if let Some(status) = maybe_status {
-        println!("{}", status);
-        return;
+pub fn list_tasks(tasks: &Vec<Task>, maybe_status: Option<&String>) {
+    let status: Option<Status> = match maybe_status {
+        Some(status) => match status.as_str() {
+            "done" => Some(Status::Done),
+            "todo" => Some(Status::Todo),
+            _ => Some(Status::InProgress)
+        },
+        None => None,
+    };
+
+    let mut filtered_tasks: Vec<Task> = tasks.clone();
+    if let Some(status_) = status {
+        filtered_tasks.retain(|task: &Task| task.status == status_);
     }
-    for task in tasks {
-        println!("{}", task.description.unwrap());
+
+    for task in filtered_tasks {
+        println!("{:?}", task);
     }
 }
